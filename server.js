@@ -21,6 +21,16 @@ const supabase = createClient(
     process.env.SUPABASE_KEY
 );
 
+// HOME PAGE
+
+app.get("/", (req, res) => {
+
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+
+});
+
+// SIGNUP API
+
 app.post("/signup", async (req, res) => {
 
     try{
@@ -40,13 +50,13 @@ app.post("/signup", async (req, res) => {
             .from("users")
             .select("*")
             .eq("mobile", mobile)
-            .single();
+            .maybeSingle();
 
         if(existingUser){
 
             return res.json({
                 success:false,
-                message:"Mobile already registered"
+                message:"Mobile already exists"
             });
 
         }
@@ -75,6 +85,8 @@ app.post("/signup", async (req, res) => {
 
     }catch(error){
 
+        console.log(error);
+
         res.json({
             success:false,
             message:"Server Error"
@@ -87,5 +99,7 @@ app.post("/signup", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+
+    console.log(`Server Running On ${PORT}`);
+
 });
